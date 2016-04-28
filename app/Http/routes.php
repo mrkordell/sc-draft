@@ -16,7 +16,3 @@ use League\Csv\Reader;
 Route::get('/', function () {
     return view('home')->withPlayers(App\Player::where('drafted',false)->orderBy('projected')->orderBy('visited', 'DESC')->orderBy('position')->get());
 });
-
-Route::post('players', function(){
-  return App\Player::all();
-});

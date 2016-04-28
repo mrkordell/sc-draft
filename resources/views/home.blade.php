@@ -35,12 +35,19 @@
             </select>
           </div>
           <div id="load" v-if="!players">LOADING PLAYERS</div>
-            <ul class="list-group">
-              <li class="list-group-item" v-for="player in players" v-bind:class="{'list-group-item-warning': player.visited}">
+            <div class="list-group">
+              <button type="button" class="list-group-item" v-for="player in players" v-bind:class="{'list-group-item-warning': player.visited}" v-on:click="changePlayer(player)">
                 <span class="badge">@{{player.projected}}</span>
                 @{{player.position}} @{{player.name}}
-              </li>
-            </ul>
+                <div v-if="currentPlayer == player">
+                  <ul>
+                    <li>@{{player.height | height }} @{{player.weight}} lbs</li>
+                    <li v-if="player.speed">@{{player.speed}}s 40 yd dash</li>
+                    <li v-for="note in player.notes">@{{note}}</li>
+                  </ul>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
     </div>
@@ -55,21 +62,48 @@
     <script src="https://cdn.jsdelivr.net/lodash/4.11.2/lodash.min.js"></script>
 
     <script>
+    Vue.filter('height', function(v){
+      var feet = Math.floor(v / 12);
+      var inches = v % 12;
+      return feet + '"' + inches + "'";
+    });
     new Vue({
       el: '#app',
       data: {
         allPlayers: {!!$players!!},
         players: [],
-        filter: ''
+        filter: '',
+        currentPlayer: {}
       },
       created: function(){
-        this.players = this.allPlayers;
-      },
-      filterPlayers: function(){
-        var position = this.filter;
-        this.players = _.filter(this.allPlayers, function(p){
-          return p.position = position;
+        this.players = _.forEach(this.allPlayers, function(p){
+          var notes = JSON.parse(p.notes);
+          p.notes = _.filter(notes, function(n){
+            if(n){
+              return n;
+            }
+          });
+          return p;
         });
+      },
+      methods: {
+        filterPlayers: function(){
+          var position = this.filter;
+          if(position){
+            this.players = _.filter(this.allPlayers, function(p){
+              return p.position == position;
+            });
+          } else {
+            this.players = this.allPlayers;
+          }
+        },
+        changePlayer(player){
+          if(this.currentPlayer == player){
+            this.currentPlayer = {};
+          } else {
+            this.currentPlayer = player;
+          }
+        }
       }
     });
     </script>
