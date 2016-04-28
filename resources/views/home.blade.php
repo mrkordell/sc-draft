@@ -21,8 +21,10 @@
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
           <h1>Steelers Draft Board</h1>
+          <div class="alert alert-warning" role="alert">Visited with the Steelers</div>
           <div id="app">
             <div class="form-group">
+              <label for="position">Filter Players</label>
             <select name="position" class="form-control" v-model="filter" v-on:change="filterPlayers">
               <option value="">All Players</option>
               <option value="WR">WR</option>
