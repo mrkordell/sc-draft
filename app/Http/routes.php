@@ -11,20 +11,21 @@
 |
 */
 
-use League\Csv\Reader;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-  $players = App\Player::where('drafted',false)->orderBy('projected')->orderBy('visited', 'DESC')->orderBy('position')->get();
+  $players = App\Player::where('drafted', false)->orderBy('projected')->orderBy('visited', 'DESC')->orderBy('position')->get();
+
   return view('home')->withPlayers($players);
 });
 
-Route::get('admin', function(){
+Route::get('admin', function () {
   $players = App\Player::orderBy('drafted')->orderBy('projected')->orderBy('position')->get();
+
   return view('admin')->withPlayers($players);
 });
 
-Route::post('player', function(Request $request){
+Route::post('player', function (Request $request) {
   $player = App\Player::find($request->input('player_id'));
 
   $player->drafted = !$player->drafted;
